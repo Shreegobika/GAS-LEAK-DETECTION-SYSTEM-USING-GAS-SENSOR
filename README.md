@@ -1,20 +1,16 @@
 # GAS-LEAK-DETECTION-SYSTEM-USING-GAS-SENSOR
 
 ## Aim:
-	To measure the air quality using Gas Sensor  MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD.
+To measure the air quality using Gas Sensor  MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD.
 
 ## Hardware / Software Tools required:
-	PC/ Laptop with Internet connection
+PC/ Laptop with Internet connection
   Tinker CAD tool (Online)
 	Arduino UNO Board/ESP-32
   Gas sensor (MQ-2)
 	
 ## Circuit Diagram:
-
- 
-
-
-
+<img width="981" height="606" alt="image" src="https://github.com/user-attachments/assets/bc1e5593-2ffb-448f-adea-c511e66b0b2d" />
 
 ## Theory :
  The Arduino Uno is powered by the ATmega328P, an 8-bit microcontroller that runs at 16 MHz. It has 32 KB of flash memory, 2 KB of SRAM, and 1 KB of EEPROM. The board 
@@ -57,10 +53,67 @@ Step 7: Save Your Work
 •	Save the Circuit: Click "Save" to keep your circuit design and code for future use.
 
 ## Program:
+```
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(5,6,8,9,10,11); // RS, EN, D4, D5, D6, D7
+
+// Pin variables
+int redLed = 3;
+int greenLed = 2;
+int buzzer = 4;
+int sensor = A0;
+int sensorThresh = 400;
+
+void setup() {
+  pinMode(redLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(sensor, INPUT);
+  Serial.begin(9600);
+  lcd.begin(16,2);
+}
+
+void loop() {
+  int analogValue = analogRead(sensor);
+  Serial.println(analogValue);
+
+  lcd.setCursor(0,0);
+  lcd.print("Gas : ");
+  lcd.print(analogValue);
+  lcd.print("   "); // Clear extra digits
+
+  if(analogValue > sensorThresh) {
+    // Gas detected
+    digitalWrite(redLed, HIGH);
+    digitalWrite(greenLed, LOW);
+
+    // Buzzer beep
+    tone(buzzer, 1000);
+    delay(500);
+    noTone(buzzer);
+    delay(500);
+
+    // Display alert messages
+    lcd.setCursor(0,1);
+    lcd.print("WARNING        ");
+  }
+  else {
+    // Safe condition
+    digitalWrite(redLed, LOW);
+    digitalWrite(greenLed, HIGH);
+    noTone(buzzer);
+
+    lcd.setCursor(0,1);
+    lcd.print("ALL CLEAR      ");
+  }
+
+  delay(100); // Small delay to refresh LCD
+}
+```
 
 ## Output:
 
-   
+https://github.com/user-attachments/assets/1ae6c4c1-a4f9-420d-aa86-96df68c680c0
 
 ## Result:
-
+The quality of air is measured using Gas Sensor MQ-2 with Arduino UNO Board/ESP-32 using Tinker CAD Verified Successfully.
